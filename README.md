@@ -1,2 +1,0 @@
-# mydatabase
-My Database. Electron
