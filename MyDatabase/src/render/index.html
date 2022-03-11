@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Hello World!</title>
+    <meta http-equiv="Content-Security-Policy" content="script-src 'self' 'unsafe-inline';" />
+</head>
+<body>
+    <h1>Hello World!</h1>
+    <p>
+        We are using Node.js <span id="node-version"></span>,
+        Chromium <span id="chrome-version"></span>,
+        and Electron <span id="electron-version"></span>.
+    </p>
+
+    Title: <input id="title"/>
+    <button id="btn" type="button">Set</button>
+
+    <script src="js/renderer.js"></script>
+    <script src="js/sqlitewrapper.js"></script>
+
+    
+    <h1>IPC通信</h1>
+    <input type="text" id="message">
+    <button onclick="sendMessageToMainProcess()">发送消息给主进程</button>
+     
+    <script type="text/javascript">
+        const electron = require("electron");
+
+        //console.log(window.ipcRenderer);
+     
+        electron.ipcRenderer.on("main-to-render-message", (event, message) => {
+            alert(message);
+        });
+     
+        function sendMessageToMainProcess() {
+            const message = document.getElementById("message").value;
+     
+            electron.ipcRenderer.send("render-to-main-message", message);
+     
+            const replayMessage = electron.ipcRenderer.sendSync("render-to-main-message-sync", message);
+            alert(replayMessage);
+        }
+    </script>
+
+</body>
+</html>
